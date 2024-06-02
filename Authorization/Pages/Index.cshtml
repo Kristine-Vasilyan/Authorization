@@ -1,0 +1,92 @@
+﻿@page
+@using Authorization.Models
+@using Microsoft.AspNetCore.Identity
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@inject SignInManager<ApplicationUser> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="button-container">
+        <button id="adminButton" class="btn btn-primary">Тeacher</button>
+        <button id="userButton" class="btn btn-secondary">Student</button>
+    </div>
+    <div id="message" class="message"></div>
+
+    @section Scripts {
+    <script>
+        document.getElementById('adminButton').addEventListener('click', function () {
+        @if (User.IsInRole("admin"))
+            {
+                <text>displayMessage('You are Тeacher!', false); </text>
+            }
+            else
+            {
+                <text>displayMessage('You are not Тeacher!', true); </text>
+            }
+                    });
+
+            document.getElementById('userButton').addEventListener('click', function () {
+            @if (User.IsInRole("admin"))
+            {
+                <text>displayMessage('You are not Student!', true); </text>
+            }
+            else
+            {
+                <text>displayMessage('You are Student!', false); </text>
+            }
+                    });
+
+            function displayMessage(message, isError) {
+                var messageElement = document.getElementById('message');
+                messageElement.innerText = message;
+                if (isError) {
+                    messageElement.classList.add('error');
+                    messageElement.classList.remove('success');
+                } else {
+                    messageElement.classList.add('success');
+                    messageElement.classList.remove('error');
+                }
+            }
+        </script>
+    }
+
+    <style>
+        .button-container {
+            display: flex;
+            gap: 20px; /* Space between buttons */
+            flex-direction: row; /* Keep buttons on the same line */
+            justify-content: center; /* Center buttons horizontally */
+            align-items: center; /* Center buttons vertically */
+        }
+
+        .btn {
+            padding: 15px 30px; /* Make buttons bigger */
+            font-size: 18px; /* Increase font size */
+        }
+
+        .message {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center; /* Center the message text */
+        }
+
+            .message.error {
+                color: red; /* Error messages in red */
+            }
+
+            .message.success {
+                color: black; /* Success messages in black */
+            }
+    </style>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome to Authentication and Authorization Application</h1>
+    </div>
+}
+
+
